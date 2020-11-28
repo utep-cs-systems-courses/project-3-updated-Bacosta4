@@ -33,19 +33,20 @@ void switch_interrupt_handler()
   switch2 = (p2val & SW2) ? 0 : 1;
   switch3 = (p2val & SW3) ? 0 : 1;
   switch4 = (p2val & SW4) ? 0 : 1;
+
   if (switch1){
-    toggle_led();
+    state = 1;
   }
   
   else if (switch2){
-    //state = 2;  
+    state = 2;  
   }
   
   else if (switch3){
-    // state = 3;
-    
+    state = 3;    
   }
+  
   else if (switch4){
-    // state = 4;
+    state = 4;
   }
 }

@@ -7,7 +7,7 @@
 #include "lcddraw.h"
 
 static char sb = 1;
-int state = 0;
+int state = 0;                /* if button press */
 
 char toggle_red()		/* always red led! */
 {
@@ -108,8 +108,7 @@ void led75()            /* Led at 75% */
   led_update();
 }
 
-void dim()                    /* Dims the Led lights 25% to 50% to 75% */
-{
+void button2() {                    /* Dims the Led lights 25% to 50% to 75% */
   static char st = 0;            // st is used for switch/ case
   switch (st){
 
@@ -166,9 +165,64 @@ void siren() {
   }
 }
 
+void state_advance() {
+  switch (state) {
 
+  case 1:
+    // button1();
+    break;
 
+  case 2:
+    //button2();
+    break;
+    
+  case 3:
+    clearScreen(COLOR_WHITE);
+    button3();
+    break;
+  }
+}
 
+void button1() {
+  static int note = 1;
+  switch (note++) {
+  case 1: buzzer_set_period(185);
+    break;
 
+  case 2: buzzer_set_period(220);
+    break;
 
-  
+  case 3: buzzer_set_period(277.18);
+    buzzer_set_period(220);
+    break;
+
+  case 4: buzzer_set_period(185);
+    break;
+
+  case 5: buzzer_set_period(293.66);
+    buzzer_set_period(293.66);
+    buzzer_set_period(293.66);
+    note = 1;
+    break;
+  }
+}
+
+void button3() {
+  static int x = 60;
+  static int y = 60;
+  static int size = 5;
+  fillRectangle(35,35,50,50,COLOR_WHITE);
+
+  for (int i = size;i >= 0;i--){                                    /* Draws a diamon that grows*/
+    drawPixel(x - i, y - i +size, COLOR_BLACK);                             /* Bottom left*/
+    drawPixel(x + i, y - i +size, COLOR_BLACK);                             /* Bottom right*/
+    drawPixel(x - i +size, y -i, COLOR_BLACK);                             /* Top right*/
+    drawPixel(x + i -size, y -i, COLOR_BLACK);                             /* Top left*/
+  }
+  if (size > 20){
+    size = 5;
+  }
+  else{
+    size++;
+  }
+}

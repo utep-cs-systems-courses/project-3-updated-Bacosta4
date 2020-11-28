@@ -4,22 +4,21 @@
 #include "lcddraw.h"
 #include "led.h"
 #include "switches.h"
+#include "statemachine.h"
 
 #define LED_GREEN BIT6             // P1.6
 
 
 short redrawScreen = 1;
-u_int fontFgColor = COLOR_GREEN;
+u_int fontFgColor = COLOR_BLACK;
 
 void wdt_c_handler()
 {
   static int secCount = 0;
-  
-  secCount ++;
-  if (secCount == 250) {		/* once/sec */
-  secCount = 0;
-  fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
-  redrawScreen = 1;
+
+  if (secCount == 125) {
+    state_advance();
+    secCount = 0;
   }
 }
   
@@ -31,6 +30,8 @@ void main()
   buzzer_init();
   switch_init();
   enableWDTInterrupts();/* enable periodic interrupt */
+  lcd_init();
+  
 
   or_sr(0x8);/* CPU off, GIE on */
 
@@ -48,7 +49,12 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      drawString5x7(20,20, "Hello", fontFgColor, COLOR_BLUE);
+      drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
       
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
