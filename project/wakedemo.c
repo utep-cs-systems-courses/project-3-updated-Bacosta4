@@ -16,7 +16,12 @@ void wdt_c_handler()
 {
   static int secCount = 0;
 
-  if (secCount == 125) {
+  if (++secCount == 125) {
+    state_advance();
+    secCount = 0;
+  }
+
+  else if(secCount == 10 && state == 2) {
     state_advance();
     secCount = 0;
   }
@@ -49,11 +54,11 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_GOLDENROD);
-      drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_GOLDENROD);
-      drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_GOLDENROD);
-      drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_GOLDENROD);
-      drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_GOLDENROD);
+      drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
+      drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
+      drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
+      drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
+      drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
       drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
       
     P1OUT &= ~LED_GREEN;	/* green off */

@@ -9,7 +9,7 @@
 static char sb = 1;
 int state = 0;                /* if button press */
 
-char toggle_red()		/* always red led! */
+char toggle_red()                 /* always red led! */
 {
   red_on = 1;
   green_on = 0;
@@ -17,7 +17,7 @@ char toggle_red()		/* always red led! */
   led_update();
 }
 
-char toggle_green()	       /* always green led!  */
+char toggle_green()              /* always green led!  */
 {
   green_on = 1;
   red_on = 0;
@@ -25,111 +25,32 @@ char toggle_green()	       /* always green led!  */
   led_update();
 }
 
-char toggle_both() {         /*turn both green & red on */
-  green_on = 1;
-  red_on = 1;
+char toggle_off() {
+  red_on = 0;
+  green_on = 0;
   led_changed = 1;
   led_update();
 }
 
-void toggle_led()           /* Turns green then red vise versa */
-{  
-  switch(state) {
+void button2(){
 
-  case 0:
-    toggle_red();
-    state = 1;
-    break;
+  static int dim = 1;
+
+  switch(dim++) {
 
   case 1:
-    toggle_green();
-    state = 0;
-    break;
-  }
-}
 
-void led25()               /* Led at 25% */
- {   
-    switch(state) {
-      
-      case 0:
-	red_on = 0;
-	state = 1;
-	break;
-
-      case 1:
-	red_on = 0;
-	state = 2;
-	break;
-
-      case 2:
-	red_on = 1;
-	state = 0;
-	break;
-    }
+  case 2:
+    red_on = 1;
     led_update();
-}
-
-void led50()             /* Led at 50% */
-{ 
-  switch(state) {
-    case 0:
-      red_on = 1;
-      state = 1;
-      break;
-
-    case 1:
-      red_on = 0;
-      state = 0;
-      break;
-    }
-  led_update();
-}
-
-void led75()            /* Led at 75% */
-{ 
-  switch(state) {
-    
-  case 0:
-    red_on = 1;
-    state = 1;
     break;
-    
-  case 1:
-    red_on = 1;
-    state = 2;
-    break;
-    
-  case 2:
+
+  case 3:
     red_on = 0;
-    state = 0;
+    led_update();
+    dim = 1;
     break;
   }
-  led_update();
-}
-
-void button2() {                    /* Dims the Led lights 25% to 50% to 75% */
-  static char st = 0;            // st is used for switch/ case
-  switch (st){
-
-  case 0:
-    led50();
-    led50();
-    st = 1;
-    break;
-    
-  case 1:
-    led75();
-    led75();
-    st = 2; 
-    break;
-
-  case 2:
-    led25();
-    led25();
-    st = 0;
-    break;
- }
 }
 
 void buzzer() {              
@@ -166,18 +87,25 @@ void siren() {
 }
 
 void state_advance() {
+  static int called = 0;
   switch (state) {
 
   case 1:
-    // button1();
+    clearScreen(COLOR_BLACK);
+    toggle_off();
+    button1();
     break;
 
   case 2:
-    //button2();
+    buzzer_set_period(0);
+    clearScreen(COLOR_WHITE);
+    button2();
     break;
     
   case 3:
+    buzzer_set_period(0);
     clearScreen(COLOR_WHITE);
+    toggle_off();
     button3();
     break;
   }
@@ -186,22 +114,42 @@ void state_advance() {
 void button1() {
   static int note = 1;
   switch (note++) {
-  case 1: buzzer_set_period(185);
+
+  case 1:
+    buzzer_set_period(1480);
+    drawChar11x16(42,20,'S',COLOR_VIOLET,COLOR_BLACK);
+    drawChar11x16(53,20,'h',COLOR_VIOLET,COLOR_BLACK);
     break;
 
-  case 2: buzzer_set_period(220);
+  case 2:
+    buzzer_set_period(1760);
+    drawChar11x16(64,20,'o',COLOR_VIOLET,COLOR_BLACK);
+    drawChar11x16(75,20,'r',COLOR_VIOLET,COLOR_BLACK);
     break;
 
-  case 3: buzzer_set_period(277.18);
-    buzzer_set_period(220);
+  case 3:
+    buzzer_set_period(1109);
+    buzzer_set_period(1760);
+    drawChar11x16(86,20,'t',COLOR_VIOLET,COLOR_BLACK);
     break;
 
-  case 4: buzzer_set_period(185);
+  case 4:
+    buzzer_set_period(1480);
+    drawChar11x16(40,37,'S',COLOR_VIOLET,COLOR_BLACK);
     break;
 
-  case 5: buzzer_set_period(293.66);
-    buzzer_set_period(293.66);
-    buzzer_set_period(293.66);
+  case 5:
+    buzzer_set_period(1175);
+    buzzer_set_period(1757);
+    buzzer_set_period(1757);
+    drawChar11x16(51,37,'o',COLOR_VIOLET,COLOR_BLACK);
+    break;
+
+  case 6:
+    buzzer_set_period(1109);
+    buzzer_set_period(1175);
+    drawChar11x16(62,37,'n',COLOR_VIOLET,COLOR_BLACK);
+    drawChar11x16(73,37,'g',COLOR_VIOLET,COLOR_BLACK);
     note = 1;
     break;
   }
