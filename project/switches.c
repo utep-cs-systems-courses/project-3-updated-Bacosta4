@@ -1,6 +1,7 @@
 #include <msp430.h>
 #include "switches.h"
 #include "statemachine.h"
+#include "led.h"
 
 //char switch_state_down, switch_state_changed; /* effectively boolean */
 
@@ -32,20 +33,19 @@ void switch_interrupt_handler()
   switch2 = (p2val & SW2) ? 0 : 1;
   switch3 = (p2val & SW3) ? 0 : 1;
   switch4 = (p2val & SW4) ? 0 : 1;
-
-  if (switch1) {         // If button 1 is pressed
+  if (switch1){
     toggle_led();
   }
-
-  else if (switch2) {   // If button 2 is pressed
-    //   state = 2;
+  
+  else if (switch2){
+    //state = 2;  
   }
-
-  else if(switch3) {    // If button 3 is pressed
-    //state = 3;
+  
+  else if (switch3){
+    // state = 3;
+    
   }
-
-  else if(switch4) {  // If button 4 is pressed
+  else if (switch4){
     // state = 4;
   }
 }

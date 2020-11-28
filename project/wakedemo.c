@@ -2,6 +2,8 @@
 #include <libTimer.h>
 #include "lcdutils.h"
 #include "lcddraw.h"
+#include "led.h"
+#include "switches.h"
 
 #define LED_GREEN BIT6             // P1.6
 
@@ -12,18 +14,28 @@ u_int fontFgColor = COLOR_GREEN;
 void wdt_c_handler()
 {
   static int secCount = 0;
-
+  
   secCount ++;
   if (secCount == 250) {		/* once/sec */
-    secCount = 0;
-    fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
-    redrawScreen = 1;
+  secCount = 0;
+  fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
+  redrawScreen = 1;
   }
 }
   
 
 void main()
 {
+  configureClocks();/* setup master oscillator, CPU & peripheral clocks */
+  led_init();
+  buzzer_init();
+  switch_init();
+  enableWDTInterrupts();/* enable periodic interrupt */
+
+  or_sr(0x8);/* CPU off, GIE on */
+
+
+  
   P1DIR |= LED_GREEN;		/**< Green led on when CPU on */		
   P1OUT |= LED_GREEN;
   configureClocks();
