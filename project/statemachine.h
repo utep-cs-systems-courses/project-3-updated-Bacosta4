@@ -8,9 +8,9 @@ void state_advance();
 
 extern int state;
 
-void led25();
-void led50();
-void led75();
+void dim25();
+void dim50();
+void dim75();
 
 void state_advance();
 void button1();

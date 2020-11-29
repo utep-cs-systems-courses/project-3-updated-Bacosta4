@@ -18,9 +18,9 @@ static char switch_update_interrupt_sense()
 
 void switch_init()			/* setup switch */
 {  
-  P2REN |= SWITCHES;		/* enables resistors for switches */
+  P2REN |= SWITCHES;		/* register that programs a pullup/down  */
   P2IE |= SWITCHES;		/* enable interrupts from switches */
-  P2OUT |= SWITCHES;		/* pull-ups for switches */
+  P2OUT |= SWITCHES;		/* register selects if pin is pulled up or down */
   P2DIR &= ~SWITCHES;		/* set switches' bits for input */
   switch_update_interrupt_sense();
 }
@@ -34,19 +34,19 @@ void switch_interrupt_handler()
   switch3 = (p2val & SW3) ? 0 : 1;
   switch4 = (p2val & SW4) ? 0 : 1;
 
-  if (switch1){
+  if (switch1){              /* Button 1 is pressed*/
     state = 1;
   }
   
-  else if (switch2){
+  else if (switch2){         /* Button 2 is pressed*/
     state = 2;  
   }
   
-  else if (switch3){
+  else if (switch3){         /* Button 3 is pressed*/
     state = 3;    
   }
   
-  else if (switch4){
+  else if (switch4){         /* Button 4 is pressed */
     state = 4;
   }
 }

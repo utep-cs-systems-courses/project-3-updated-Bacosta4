@@ -6,24 +6,8 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 
-static char sb = 1;
 int state = 0;                /* if button press */
-
-char toggle_red()                 /* always red led! */
-{
-  red_on = 1;
-  green_on = 0;
-  led_changed = 1;
-  led_update();
-}
-
-char toggle_green()              /* always green led!  */
-{
-  green_on = 1;
-  red_on = 0;
-  led_changed = 1;
-  led_update();
-}
+static char dim = 0;           /* used for dims switch case */
 
 char toggle_off() {                /*Turns both led off*/
   red_on = 0;
@@ -31,62 +15,90 @@ char toggle_off() {                /*Turns both led off*/
   led_changed = 1;
   led_update();
 }
-
-void button2(){                  /* Dimms the green led */
-
-  static int dim = 1;
-
-  switch(dim++) {
-
-  case 1:
-
-  case 2:
-    red_on = 1;
-    led_update();
-    break;
-
-  case 3:
-    red_on = 0;
-    led_update();
-    dim = 1;
-    break;
-  }
-}
-
-void buzzer() {              
-  static int x = 500;
-  if(sb) {                        /* Goes up for buzzer */
-    toggle_red();
-    x += 225;
-  }
-  else { 
-    toggle_green();               /* Goes down for buzzer */
-    x -= 450;
-  }
-  short cycles = 2000000 / x;
-  buzzer_set_period(cycles);
-}
-
-void siren() {
-
-  switch(state) {
+  
+void dim25() {                      /* Dims leds to 25% */
+  switch(dim) {
 
   case 0:
-    sb = 1;
-    state++;
+    red_on = 1;
+    dim++;
     break;
-    
   case 1:
-    sb = 0;
-    state = 0;
+  case 2:
+  case 3:
+    red_on = 0;
+    dim++;
     break;
-    
   default:
-    break;
+    dim = 0;
   }
+  led_changed = 1;
+  led_update();
+}
+ 
+void dim50() {                        /* Dims leds to 50% */
+  switch(dim){
+  case 0:
+  case 1:
+    red_on = 1;
+    dim++;
+    break;
+  case 2:
+  case 3:
+    red_on = 0;
+    dim++;
+  default:
+    dim = 0;
+  }
+  led_changed = 1;
+  led_update();
 }
 
-void state_advance() {              /* State advance works w/ wdt*/
+void dim75() {                       /* Dims leds to 75% */
+  switch(dim) {
+  case 0:
+    red_on = 0;
+    dim++;
+    break;
+  case 1:
+  case 2:
+  case 3:
+    red_on = 1;
+    dim++;
+    break;
+  default:
+    dim = 0;
+  }
+  led_changed = 1;
+  led_update();
+}
+
+void button2() {                   /* Dims light to 25%, 50% and 75% */
+  static int select = 0;
+  switch(select) {
+    case 0:
+      red_on = 1;
+      led_update();
+      select++;
+      break;
+    case 1:
+      dim25();
+      select++;
+      break;
+    case 2:
+      dim50();
+      select++;
+      break;
+    case 3:
+      dim75();
+      select = 0;
+      break;
+  }
+  led_changed = 1;
+  led_update();
+}
+
+void state_advance() {              /* State advance works w/ wdt */
 
   
   switch (state) {
@@ -99,7 +111,7 @@ void state_advance() {              /* State advance works w/ wdt*/
 
   case 2:
     buzzer_set_period(0);
-    clearScreen(COLOR_WHITE);
+    clearScreen(COLOR_SEA_GREEN);
     button2();
     break;
     
@@ -127,7 +139,7 @@ void state_advance() {              /* State advance works w/ wdt*/
   }
 }
 
-void button1() {                                /*Button one plays a tune*/
+void button1() {                                /* Button one plays a tune and writes a text */
   static int note = 1;
   switch (note++) {
 
@@ -191,7 +203,7 @@ void button3() {
   }
 }
 
-void button4() {                             /* Moves diamond side to side*/
+void button4() {                             /* Moves diamond side to side */
   static int move = 0;
   static int x = 60;
   static int y =60;
@@ -214,7 +226,7 @@ void button4() {                             /* Moves diamond side to side*/
   }
   break;
 
-  case 1:                              /* Moves diamond from left to right*/
+  case 1:                              /* Moves diamond from left to right */
     x = x - 4;
     y = y + 4;
     if (x < 10) {
