@@ -87,7 +87,8 @@ void siren() {
 }
 
 void state_advance() {              /* State advance works w/ wdt*/
-  static int called = 0;
+
+  
   switch (state) {
 
   case 1:
@@ -110,9 +111,19 @@ void state_advance() {              /* State advance works w/ wdt*/
     break;
 
   case 4:
+    buzzer_set_period(0);
     clearScreen(COLOR_BLACK);
     button4();
     break;
+
+  default:
+    clearScreen(COLOR_BLACK);
+    drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
+    drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
+    drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
+    drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
+    drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
+    drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
   }
 }
 

@@ -8,7 +8,6 @@
 
 #define LED_GREEN BIT6             // P1.6
 
-
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_BLACK;
 
@@ -19,16 +18,19 @@ void wdt_c_handler()
   if (++secCount == 125) {
     state_advance();
     secCount = 0;
+    redrawScreen = 1;
   }
 
   else if(secCount == 10 && state == 2) {
     state_advance();
     secCount = 0;
+    redrawScreen = 1;
   }
 
   else if(secCount == 30 && state == 4) {
     state_advance();
     secCount = 0;
+    redrawScreen = 1;
   }
 }
   
@@ -55,20 +57,14 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
-  clearScreen(COLOR_BLUE);
+  clearScreen(COLOR_BLACK);
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
-      drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
-      drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
-      drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
-      drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
-      drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
+      }
       
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
     P1OUT |= LED_GREEN;		/* green on */
-    }
   }
 }
