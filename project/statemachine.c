@@ -25,14 +25,14 @@ char toggle_green()              /* always green led!  */
   led_update();
 }
 
-char toggle_off() {
+char toggle_off() {                /*Turns both led off*/
   red_on = 0;
   green_on = 0;
   led_changed = 1;
   led_update();
 }
 
-void button2(){
+void button2(){                  /* Dimms the green led */
 
   static int dim = 1;
 
@@ -86,7 +86,7 @@ void siren() {
   }
 }
 
-void state_advance() {
+void state_advance() {              /* State advance works w/ wdt*/
   static int called = 0;
   switch (state) {
 
@@ -108,10 +108,15 @@ void state_advance() {
     toggle_off();
     button3();
     break;
+
+  case 4:
+    clearScreen(COLOR_BLACK);
+    button4();
+    break;
   }
 }
 
-void button1() {
+void button1() {                                /*Button one plays a tune*/
   static int note = 1;
   switch (note++) {
 
@@ -161,7 +166,7 @@ void button3() {
   static int size = 5;
   fillRectangle(35,35,50,50,COLOR_WHITE);
 
-  for (int i = size;i >= 0;i--){                                    /* Draws a diamon that grows*/
+  for (int i = size;i >= 0;i--){                         /* Draws a diamond that grows in size */
     drawPixel(x - i, y - i +size, COLOR_BLACK);                             /* Bottom left*/
     drawPixel(x + i, y - i +size, COLOR_BLACK);                             /* Bottom right*/
     drawPixel(x - i +size, y -i, COLOR_BLACK);                             /* Top right*/
@@ -172,5 +177,37 @@ void button3() {
   }
   else{
     size++;
+  }
+}
+
+void button4() {                             /* Moves diamond side to side*/
+  static int move = 0;
+  static int x = 60;
+  static int y =60;
+  static int size = 15;
+  fillRectangle(35,35,50,50,COLOR_BLACK);
+
+  for (int j =  size;j >= 0;j--){
+    drawPixel(x-j,y-j+size, COLOR_YELLOW);
+    drawPixel(x+j,y-j+size, COLOR_YELLOW);
+    drawPixel(x-j+size,y-j, COLOR_YELLOW);
+    drawPixel(x+j-size,y-j, COLOR_YELLOW);
+  }
+
+  switch(move) {                        /* Moves diamond from right to left */
+  case 0:
+     x = x + 4;
+     y = y - 4;
+     if(x > 105) {
+       move = 1;
+  }
+  break;
+
+  case 1:                              /* Moves diamond from left to right*/
+    x = x - 4;
+    y = y + 4;
+    if (x < 10) {
+      move = 0;
+    }
   }
 }

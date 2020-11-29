@@ -25,6 +25,11 @@ void wdt_c_handler()
     state_advance();
     secCount = 0;
   }
+
+  else if(secCount == 30 && state == 4) {
+    state_advance();
+    secCount = 0;
+  }
 }
   
 
