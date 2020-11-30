@@ -10,7 +10,7 @@
 	.data
 select:
 	.word 0
-
+;;;  jt is constants (in flash)
 jt:
 	.word case0
 	.word default
@@ -21,34 +21,34 @@ jt:
 	.global button2
 
 button2:
-	cmp #4, &select
-	jhs default
+	cmp #4, &select 	;range check 
+	jhs default		;jmp if select > 4
 
 	mov &select, R12
 	add R12, R12
 	mov jt(r12), r0
 	
 case0:
-	call &toggle_on
-	add #1, &select
-	jmp end
+	call &toggle_on		;toggle_on()
+	add #1, &select		;select++
+	jmp end			;break;
 	
 case1:
-	call &dim25
-	add #1, &select
-	jmp end
+	call &dim25		;dim25()
+	add #1, &select		;select++
+	jmp end			;break;
 	
 case2:
-	call &dim50
-	add #1, &select
-	jmp end
+	call &dim50		;dim50()
+	add #1, &select		;select++
+	jmp end			;break;
 	
 case3:
-	call &dim75
-	mov #0, &select
+	call &dim75		;dim75()
+	mov #0, &select		;select = 0;
 	jmp end
 	
 default:
 	mov #0, &select
 end:
-	pop r0
+	pop r0			;return

@@ -110,32 +110,32 @@ void state_advance() {              /* State advance works w/ wdt */
   
   switch (state) {
 
-  case 1:
+  case 1:                           /* S1 turns screen black & plays a tune and shoews txt*/
     clearScreen(COLOR_BLACK);
     toggle_off();
     button1();
     break;
 
-  case 2:
+  case 2:                           /* S2 turns buzzer off, screen to green and dims lights */
     buzzer_set_period(0);
     clearScreen(COLOR_SEA_GREEN);
     button2();
     break;
     
-  case 3:
+  case 3:                          /* S3 turns buzzer off, screen to white and creates a diamond */
     buzzer_set_period(0);
     clearScreen(COLOR_WHITE);
     toggle_off();
     button3();
     break;
 
-  case 4:
+  case 4:                         /* S4 buzzer off, screen black ,moves diamond right to left*/
     buzzer_set_period(0);
     clearScreen(COLOR_BLACK);
     button4();
     break;
 
-  default:
+  default:                        /* When make load show when device has been loaded */
     clearScreen(COLOR_BLACK);
     drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
     drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);

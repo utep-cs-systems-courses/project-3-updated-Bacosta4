@@ -21,7 +21,7 @@ void switch_init()			/* setup switch */
   P2REN |= SWITCHES;		/* register that programs a pullup/down  */
   P2IE |= SWITCHES;		/* enable interrupts from switches */
   P2OUT |= SWITCHES;		/* register selects if pin is pulled up or down */
-  P2DIR &= ~SWITCHES;		/* set switches' bits for input */
+  P2DIR &= ~SWITCHES;		/* makes switches' an input */
   switch_update_interrupt_sense();
 }
 
