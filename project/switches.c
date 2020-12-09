@@ -2,6 +2,8 @@
 #include "switches.h"
 #include "statemachine.h"
 #include "led.h"
+#include "lcdutils.h"
+#include "lcddraw.h"
 
 //char switch_state_down, switch_state_changed; /* effectively boolean */
 

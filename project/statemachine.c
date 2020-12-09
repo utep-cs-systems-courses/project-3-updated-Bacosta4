@@ -80,40 +80,82 @@ void dim75() {                       /* Dims leds to 75% */
   led_update();
 }
 
-void button5() {                   /* Dims light to 25%, 50% and 75% */
-  static char select = 0;
-  switch(select) {
+//void button5() {                   /* Dims light to 25%, 50% and 75% */
+// static char select = 0;
+// switch(select) {
 
-  case 0:
-    toggle_on();
-    select++;
+//case 0:
+//  toggle_on();
+//  select++;
+//  break;
+    
+//case 1:
+//  dim25();
+//  select++;
+//  break;
+    
+//case 2:
+//  dim50();
+//  select++;
+//  break;
+    
+//case 3:
+//  dim75();
+//  select = 0;
+//  break;
+//}
+//}
+
+//void compare() {
+//unsigned int a = 1;
+//unsigned int b = 0;
+
+//if ( a > b)
+
+//  toggle_on();
+//else
+//  toggle_off();
+//}
+
+void state_advance() {              /* State advance works w/ wdt */
+  switch (state) {
+
+  case 1:                           /* S1 turns screen black & plays a tune and shoews txt*/
+    clearScreen(COLOR_BLACK);
+    toggle_off();
+    button1();
+    break;
+
+  case 2:                           /* S2 turns buzzer off, screen to green and dims lights */
+    buzzer_set_period(0);
+    clearScreen(COLOR_SEA_GREEN);
+    button2();
+    break;
+
+  case 3:                          /* S3 turns buzzer off, screen to white and creates a diamond */
+    buzzer_set_period(0);
+    clearScreen(COLOR_WHITE);
+    toggle_off();
+    button3();
+    break;
+
+
+  case 4:                        /* S4 buzzer off, screen black ,moves diamond right to left*/
+
+    buzzer_set_period(0);
+    clearScreen(COLOR_BLACK);
+    button4();
     break;
     
-  case 1:
-    dim25();
-    select++;
-    break;
-    
-  case 2:
-    dim50();
-    select++;
-    break;
-    
-  case 3:
-    dim75();
-    select = 0;
-    break;
+  default:                        /* When make load show when device has been loaded */
+    clearScreen(COLOR_BLACK);
+    drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
+    drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
+    drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
+    drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
+    drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
+    drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
   }
-}
-
-void compare() {
-  unsigned int a = 1;
-  unsigned int b = 0;
-
-  if ( a > b)
-    drawChar11x16(42,20,'S',COLOR_RED,COLOR_BLACK);
-  else
-    drawChar11x16(42,20,'S',COLOR_GREEN,COLOR_BLACK);
 }
 
 void button1() {                                /* Button one plays a tune and writes a text */
@@ -122,25 +164,29 @@ void button1() {                                /* Button one plays a tune and w
 
   case 1:
     buzzer_set_period(1480);
-    compare();
+    drawChar11x16(42,20,'S',COLOR_VIOLET,COLOR_BLACK);
     drawChar11x16(53,20,'h',COLOR_VIOLET,COLOR_BLACK);
+    compare();
     break;
 
   case 2:
     buzzer_set_period(1760);
     drawChar11x16(64,20,'o',COLOR_VIOLET,COLOR_BLACK);
     drawChar11x16(75,20,'r',COLOR_VIOLET,COLOR_BLACK);
+    toggle_off();
     break;
 
   case 3:
     buzzer_set_period(1109);
     buzzer_set_period(1760);
     drawChar11x16(86,20,'t',COLOR_VIOLET,COLOR_BLACK);
+    compare();
     break;
 
   case 4:
     buzzer_set_period(1480);
     drawChar11x16(40,37,'S',COLOR_VIOLET,COLOR_BLACK);
+    toggle_off();
     break;
 
   case 5:
@@ -148,6 +194,7 @@ void button1() {                                /* Button one plays a tune and w
     buzzer_set_period(1757);
     buzzer_set_period(1757);
     drawChar11x16(51,37,'o',COLOR_VIOLET,COLOR_BLACK);
+    compare();
     break;
 
   case 6:
@@ -155,6 +202,7 @@ void button1() {                                /* Button one plays a tune and w
     buzzer_set_period(1175);
     drawChar11x16(62,37,'n',COLOR_VIOLET,COLOR_BLACK);
     drawChar11x16(73,37,'g',COLOR_VIOLET,COLOR_BLACK);
+    toggle_off();
     note = 1;
     break;
   }
