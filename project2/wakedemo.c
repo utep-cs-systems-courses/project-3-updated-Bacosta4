@@ -16,19 +16,19 @@ void wdt_c_handler()
 {
   static int secCount = 0;
 
-    if (++secCount == 125 && state == 1 ) {
+    if (++secCount >= 125 && state == 1 ) {
     secCount = 0;
     redrawScreen = 1;
   }
-    else if((secCount == 10) && state == 2) {
+    else if((secCount >= 10) && state == 2) {
     secCount = 0;
     redrawScreen = 1;
   }
-    else if ((++secCount == 125) && state == 3) {
+    else if ((secCount >= 125) && state == 3) {
     secCount = 0;
     redrawScreen = 1;
   }
-    else if ((secCount == 30) && state == 4) {
+    else if ((secCount >= 30) && state == 4) {
     secCount = 0;
     redrawScreen = 1;
   }
