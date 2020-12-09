@@ -1,4 +1,3 @@
-
 #include <msp430.h>
 #include <libTimer.h>
 #include "lcdutils.h"
@@ -16,20 +15,21 @@ void wdt_c_handler()
 {
   static int secCount = 0;
 
-  if (++secCount == 125) {
-    state_advance();
+  if (++secCount == 100 && state == 1) {
+    secCount = 0;
+    redrawScreen = 1;
+  }
+  else if (++secCount == 100 && state == 2) {
     secCount = 0;
     redrawScreen = 1;
   }
 
   else if(secCount == 10 && state == 2) {
-    state_advance();
     secCount = 0;
     redrawScreen = 1;
   }
 
   else if(secCount == 30 && state == 4) {
-    state_advance();
     secCount = 0;
     redrawScreen = 1;
   }
@@ -44,87 +44,54 @@ void main()
   switch_init();
   enableWDTInterrupts();/* enable periodic interrupt */
   lcd_init();
-  
 
-  or_sr(0x8);/* CPU off, GIE on */
-
-
-  
-  P1DIR |= LED_GREEN;		/**< Green led on when CPU on */		
+  P1DIR |= LED_GREEN;/**< Green led on when CPU on */
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
-  
+
   enableWDTInterrupts();      /**< enable periodic interrupt */
-  or_sr(0x8);	              /**< GIE (enable interrupts) */
+  or_sr(0x8);              /**< GIE (enable interrupts) */
   
-  // clearScreen(COLOR_BLACK);
-  while (1){  		/* forever */
-    if (state == 4) {
-      //void button4() {                             /* Moves diamond side to side */
+  clearScreen(COLOR_BLACK);
+  drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
+  drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
+  drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
+  drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
+  drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
+  drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
 
-	static int move = 0;
+  while (1){
+    if (redrawScreen){
+      
+      switch (state) {
 
-	static int x = 60;
+      case 1:                           /* S1 turns screen black & plays a tune and shoews txt*/
+	clearScreen(COLOR_BLACK);
+	toggle_off();
+	button1();
+	break;
 
-	static int y =60;
+      case 2:                           /* S2 turns buzzer off, screen to green and dims lights */
+	buzzer_set_period(0);
+	clearScreen(COLOR_SEA_GREEN);
+	button2();
+	break;
 
-	static int size = 15;
+     case 3:                      /* S3 turns buzzer off, screen to white and creates a diamond */
+       buzzer_set_period(0);
+       clearScreen(COLOR_WHITE);
+       button3();
+	break;
 
-	//	fillRectangle(35,35,50,50,COLOR_BLACK);
-
-
-
-	for (int j =  size;j >= 0;j--){
-
-	  drawPixel(x-j,y-j+size, COLOR_RED);
-
-	  drawPixel(x+j,y-j+size, COLOR_RED);
-
-	  drawPixel(x-j+size,y-j, COLOR_RED);
-
-	  drawPixel(x+j-size,y-j, COLOR_RED);
-
-	}
-
-
-
-	switch(move) {                        /* Moves diamond from right to left */
-
-	case 1:
-
-	  x = x + 4;
-
-	  y = y - 4;
-
-	  if(x > 105) {
-
-	    move = 0;
-
-	  }
-
-	  break;
-
-
-
-	case 0:                              /* Moves diamond from left to right */
-
-	  x = x - 4;
-
-	  y = y + 4;
-
-	  if (x < 10) {
-
-	    move = 1;
-
-	  }
-
-	}
-
-	//     }
+      case 4:                         /* S4 buzzer off, screen black ,moves diamond right to left*/
+	buzzer_set_period(0);
+	clearScreen(COLOR_BLACK);
+	button4();
+	break;
+      }
       redrawScreen = 0;
     }
-  
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
     P1OUT |= LED_GREEN;		/* green on */

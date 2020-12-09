@@ -5,7 +5,7 @@
 #include "buzzer.h"
 #include "lcdutils.h"
 #include "lcddraw.h"
-
+  
 int state = 0;                /* if button press */
 static char dim = 0;           /* used for dims switch case */
 
@@ -106,44 +106,14 @@ void button5() {                   /* Dims light to 25%, 50% and 75% */
   }
 }
 
-void state_advance() {              /* State advance works w/ wdt */
-  
-  switch (state) {
+void compare() {
+  unsigned int a = 1;
+  unsigned int b = 0;
 
-  case 1:                           /* S1 turns screen black & plays a tune and shoews txt*/
-    clearScreen(COLOR_BLACK);
-    toggle_off();
-    button1();
-    break;
-
-  case 2:                           /* S2 turns buzzer off, screen to green and dims lights */
-    buzzer_set_period(0);
-    clearScreen(COLOR_SEA_GREEN);
-    button2();
-    break;
-    
-  case 3:                          /* S3 turns buzzer off, screen to white and creates a diamond */
-    buzzer_set_period(0);
-    clearScreen(COLOR_WHITE);
-    toggle_off();
-    button3();
-    break;
-
-  case 4:                         /* S4 buzzer off, screen black ,moves diamond right to left*/
-    buzzer_set_period(0);
-    clearScreen(COLOR_BLACK);
-    button4();
-    break;
-
-  default:                        /* When make load show when device has been loaded */
-    clearScreen(COLOR_BLACK);
-    drawChar11x16(30,50,'R',COLOR_WHITE,COLOR_BLACK);
-    drawChar11x16(41,50,'e',COLOR_WHITE,COLOR_SEA_GREEN);
-    drawChar11x16(52,50,'a',COLOR_WHITE,COLOR_HOT_PINK);
-    drawChar11x16(63,50,'d',COLOR_WHITE,COLOR_CYAN);
-    drawChar11x16(74,50,'y',COLOR_WHITE,COLOR_MAGENTA);
-    drawChar11x16(85,50,'!',COLOR_WHITE,COLOR_GOLDENROD);
-  }
+  if ( a > b)
+    drawChar11x16(42,20,'S',COLOR_RED,COLOR_BLACK);
+  else
+    drawChar11x16(42,20,'S',COLOR_GREEN,COLOR_BLACK);
 }
 
 void button1() {                                /* Button one plays a tune and writes a text */
@@ -152,7 +122,7 @@ void button1() {                                /* Button one plays a tune and w
 
   case 1:
     buzzer_set_period(1480);
-    drawChar11x16(42,20,'S',COLOR_VIOLET,COLOR_BLACK);
+    compare();
     drawChar11x16(53,20,'h',COLOR_VIOLET,COLOR_BLACK);
     break;
 

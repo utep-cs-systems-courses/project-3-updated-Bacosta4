@@ -4,7 +4,7 @@
 #include "buzzer.h"
 #include "switches.h"
 
-void state_advance();
+//void state_advance();
 
 extern int state;
 

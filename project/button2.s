@@ -18,7 +18,7 @@ jt:
 button2:
 	cmp #4, &select 	;range check 
 	jhs default		;jmp if select >(-) 4
-
+	
 	mov &select, R12
 	add R12, R12
 	mov jt(r12), r0
